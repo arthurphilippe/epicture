@@ -12,6 +12,13 @@ import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.content_main.*
+import java.io.BufferedReader
+import java.io.InputStreamReader
+import java.net.HttpURLConnection
+import java.net.URL
+import android.os.StrictMode
+
+
 
 class  MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -19,6 +26,9 @@ class  MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
+
+        val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
+        StrictMode.setThreadPolicy(policy)
 
         fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
@@ -79,7 +89,28 @@ class  MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
 
             }
             R.id.nav_share -> {
+                val url = "http://www.google.com/"
+                val obj = URL(url)
 
+                with(obj.openConnection() as HttpURLConnection) {
+                    // optional default is GET
+                    requestMethod = "GET"
+
+
+                    println("\nSending 'GET' request to URL : $url")
+                    println("Response Code : $responseCode")
+
+                    BufferedReader(InputStreamReader(inputStream)).use {
+                        val response = StringBuffer()
+
+                        var inputLine = it.readLine()
+                        while (inputLine != null) {
+                            response.append(inputLine)
+                            inputLine = it.readLine()
+                        }
+                        println(response.toString())
+                    }
+                }
             }
             R.id.nav_send -> {
 
