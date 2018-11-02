@@ -1,9 +1,15 @@
 <resources>
     <string name="app_name">epicture</string>
+    <string name="imgur_id">d4fc4058731bcf0</string>
+    <string name="imgur_secret">55bf5731740bc313e909be48f52d669541d9184a</string>
+    <string name="imgur_login_route">dsfd</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Epitecture</string>
     <string name="nav_header_subtitle">Anonymous</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
+    <string name="search_activity_title">Search</string>
+    <string name="search_field">Query</string>
+    <string name="search_query_desc">Search on Imgur</string>
 </resources>
