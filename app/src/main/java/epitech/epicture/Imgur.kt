@@ -25,7 +25,7 @@ class Imgur {
 
             val response = client.newCall(request).execute()
             val json = response.body()
-            return json.string()
+            return json?.string()
         }
     }
 }
