@@ -36,7 +36,7 @@ class LoginActivity : AppCompatActivity() {
             index++
         }
         if (Imgur.accessToken != null && Imgur.username != null)
-        Imgur.loggedIn = true
+            Imgur.loggedIn = true
         finish()
     }
 

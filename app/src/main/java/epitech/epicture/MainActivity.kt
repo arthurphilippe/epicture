@@ -103,7 +103,8 @@ class  MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                 startActivity(i)
             }
             R.id.nav_slideshow -> {
-
+                val rep = Imgur.getSelfImages()
+                textViewTest.text = rep.toString()
             }
             R.id.nav_manage -> {
 
