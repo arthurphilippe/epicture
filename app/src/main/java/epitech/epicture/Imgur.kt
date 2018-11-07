@@ -8,6 +8,7 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import org.json.JSONObject
+import java.lang.Exception
 
 
 class Imgur {
@@ -22,20 +23,24 @@ class Imgur {
         var refreshToken: String? = null
 
         fun getSelfImages(): List<Item> {
-            val client = OkHttpClient()
+            var items: List<Item> = try {
+                val client = OkHttpClient()
 
-            val request = Request.Builder()
-                .url("https://api.imgur.com/3/account/me/images")
-                .get()
-                .addHeader("cache-control", "no-cache")
-                .addHeader("Authorization", "Bearer ${Imgur.accessToken}")
-                .build()
+                val request = Request.Builder()
+                    .url("https://api.imgur.com/3/account/me/images")
+                    .get()
+                    .addHeader("cache-control", "no-cache")
+                    .addHeader("Authorization", "Bearer ${Imgur.accessToken}")
+                    .build()
 
-            val response = client.newCall(request).execute()
-            val json = response.body()?.string()
-            val jsonObj = JSONObject(json?.substring(json.indexOf("{"), json.lastIndexOf("}") + 1))
-            val data = jsonObj.getJSONArray("data")
-            var items : List<Item> = gson.fromJson(data.toString(), object : TypeToken<List<Item>>() {}.type)
+                val response = client.newCall(request).execute()
+                val json = response.body()?.string()
+                val jsonObj = JSONObject(json?.substring(json.indexOf("{"), json.lastIndexOf("}") + 1))
+                val data = jsonObj.getJSONArray("data")
+                gson.fromJson(data.toString(), object : TypeToken<List<Item>>() {}.type)
+            } catch (e: Exception) {
+                listOf()
+            }
             return items
         }
     }
