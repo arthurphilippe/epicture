@@ -12,4 +12,8 @@
     <string name="search_activity_title">Search</string>
     <string name="search_field">Query</string>
     <string name="search_query_desc">Search on Imgur</string>
+    <string name="card_title">No title</string>
+    <string name="card_content">No description</string>
+    <string name="action_fav">Add to Favorites</string>
+    <string name="action_unfav">Remove from Favorites</string>
 </resources>

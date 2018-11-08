@@ -9,8 +9,6 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.activity_my_images.view.*
-import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.content_my_images.view.*
 
 
@@ -44,7 +42,7 @@ class MyImagesActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewAdapter: RecyclerView.Adapter<*>
     private lateinit var viewManager: RecyclerView.LayoutManager
-    private lateinit var dataset: List<Imgur.Item>
+    private lateinit var dataSet: List<Imgur.Item>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,8 +50,8 @@ class MyImagesActivity : AppCompatActivity() {
 
         viewManager = LinearLayoutManager(this)
 
-        dataset = Imgur.getSelfImages()
-        viewAdapter = ImagesRvAdapter(this, dataset)
+        dataSet = Imgur.getSelfImages()
+        viewAdapter = ImagesRvAdapter(this, dataSet)
 
         recyclerView = findViewById<RecyclerView>(R.id.rv).apply {
             // use a linear layout manager
