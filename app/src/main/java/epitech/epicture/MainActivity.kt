@@ -103,13 +103,9 @@ class  MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                 startActivity(i)
             }
             R.id.nav_slideshow -> {
-                val rep = Imgur.getSelfImages()
-                textViewTest.text = rep.toString()
-                Picasso
-                    .with(this) // give it the context
-                    .load(rep[0].link) // load the image
-                    .into(myImageView) // select the ImageView to load it into
-
+                val i = Intent(this, MyImagesActivity::class.java)
+                print("toto")
+                startActivity(i)
             }
             R.id.nav_manage -> {
 
