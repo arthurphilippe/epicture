@@ -23,7 +23,6 @@
         </activity>
         <activity android:name=".SearchActivity" />
         <activity android:name=".LoginActivity" />
-        <activity android:name=".MyImagesActivity"/>
     </application>
 
 </manifest>

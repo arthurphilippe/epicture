@@ -139,9 +139,7 @@ class  MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                 startActivity(i)
             }
             R.id.nav_search -> {
-                val i = Intent(this, MyImagesActivity::class.java)
-                print("toto")
-                startActivity(i)
+
             }
             R.id.nav_share -> {
                 val url = "http://www.google.com/"
