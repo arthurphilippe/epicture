@@ -18,49 +18,74 @@ import java.net.HttpURLConnection
 import java.net.URL
 import android.os.StrictMode
 import android.content.Intent
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import kotlinx.android.synthetic.main.nav_header_main.*
 
 class  MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+    enum class Mode {
+        GALLERY, FAVORITES
+    }
+
+    private var mode: Mode = Mode.GALLERY
+
+    //! Recycler view variables
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var viewAdapter: RecyclerView.Adapter<*>
+    private lateinit var viewManager: RecyclerView.LayoutManager
+    private lateinit var dataSet: List<Imgur.Item>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        setSupportActionBar(toolbar)
 
+        //! Permit http requests
         val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
         StrictMode.setThreadPolicy(policy)
 
+        //! Init FAB
         fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show()
         }
 
+        //! Init drawer
+        setSupportActionBar(toolbar)
         val toggle = ActionBarDrawerToggle(
             this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
         )
         drawer_layout.addDrawerListener(toggle)
         toggle.syncState()
-
         nav_view.setNavigationItemSelectedListener(this)
 
-        Picasso
-            .with(this) // give it the context
-            .load("https://i.imgur.com/H981AN7.jpg") // load the image
-            .into(myImageView) // select the ImageView to load it into
-
+        //! Login if needed
         if (!Imgur.loggedIn) {
             val i = Intent(this, LoginActivity::class.java)
             startActivity(i)
         } else {
             drawerUsername.text = Imgur.username
-            textViewTest.text = Imgur.username
+            initRv()
         }
+    }
+
+    private fun initRv() {
+        viewManager = LinearLayoutManager(this)
+        dataSet = Imgur.getSelfImages()
+        viewAdapter = ImagesRvAdapter(this, dataSet)
+        recyclerView = findViewById<RecyclerView>(R.id.rv).apply {
+            // use a linear layout manager
+            layoutManager = viewManager
+
+            // specify an viewAdapter (see also next example)
+            adapter = viewAdapter
+        }
+
     }
 
     override fun onResume() {
         if (Imgur.loggedIn) {
             drawerUsername.text = Imgur.username
-            textViewTest.text = Imgur.username
+            initRv()
         }
         super.onResume()
     }

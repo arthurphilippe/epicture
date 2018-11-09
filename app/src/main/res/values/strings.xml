@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">epicture</string>
+    <string name="app_name">Epicture</string>
     <string name="imgur_id">d4fc4058731bcf0</string>
     <string name="imgur_secret">55bf5731740bc313e909be48f52d669541d9184a</string>
     <string name="imgur_login_route">dsfd</string>

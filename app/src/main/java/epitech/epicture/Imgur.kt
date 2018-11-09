@@ -15,7 +15,7 @@ class Imgur {
     data class Item(val id: String, val title: String, val favorite : Boolean, val link: String)
 
     companion object {
-        val gson = GsonBuilder().setPrettyPrinting().create()
+        private val gson = GsonBuilder().setPrettyPrinting().create()
 
         var loggedIn: Boolean = false
         var username: String? = null
@@ -44,6 +44,20 @@ class Imgur {
             return client.newCall(request).execute()
         }
 
+        private fun requestFavoriteImages() : Response
+        {
+            val client = OkHttpClient()
+
+            val request = Request.Builder()
+                .url("https://api.imgur.com/3/account/me/favorites")
+                .get()
+                .addHeader("cache-control", "no-cache")
+                .addHeader("Authorization", "Bearer ${Imgur.accessToken}")
+                .build()
+
+            return client.newCall(request).execute()
+        }
+
         fun getSelfImages(): List<Item> {
             var items: List<Item> = try {
                 val response = requestSelfImages()
@@ -53,5 +67,16 @@ class Imgur {
             }
             return items
         }
+
+        fun getFavoriteImages(): List<Item> {
+            var items: List<Item> = try {
+                val response = requestFavoriteImages()
+                parseItemsFromResponse(response)
+            } catch (e: Exception) {
+                listOf()
+            }
+            return items
+        }
+
     }
 }
