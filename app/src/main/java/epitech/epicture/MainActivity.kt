@@ -20,9 +20,13 @@ import android.os.StrictMode
 import android.content.Intent
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.view.View
 import kotlinx.android.synthetic.main.nav_header_main.*
+import android.widget.Toast
 
-class  MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+
+
+class  MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener  {
     enum class Mode {
         GALLERY, FAVORITES
     }
@@ -117,23 +121,27 @@ class  MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         // Handle navigation view item clicks here.
         when (item.itemId) {
-            R.id.nav_camera -> {
+            R.id.nav_import -> {
                 // Handle the camera action
             }
             R.id.nav_gallery -> {
-
+                dataSet = Imgur.getSelfImages()
+                viewAdapter = ImagesRvAdapter(this, dataSet)
+                rv.adapter = viewAdapter
+            }
+            R.id.nav_favorites -> {
+                dataSet = Imgur.getFavoriteImages()
+                viewAdapter = ImagesRvAdapter(this, dataSet)
+                rv.adapter = viewAdapter
             }
             R.id.nav_search-> {
                 val i = Intent(this, SearchActivity::class.java)
                 startActivity(i)
             }
-            R.id.nav_slideshow -> {
+            R.id.nav_search -> {
                 val i = Intent(this, MyImagesActivity::class.java)
                 print("toto")
                 startActivity(i)
-            }
-            R.id.nav_manage -> {
-
             }
             R.id.nav_share -> {
                 val url = "http://www.google.com/"
