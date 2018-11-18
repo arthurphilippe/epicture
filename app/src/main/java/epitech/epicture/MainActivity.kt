@@ -49,8 +49,21 @@ class  MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
 
         //! Init FAB
         fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+            Snackbar.make(view, "Refresh", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show()
+            when (mode) {
+                Mode.GALLERY -> {
+                    dataSet = Imgur.getSelfImages()
+                    viewAdapter = ImagesRvAdapter(this, dataSet)
+                    rv.adapter = viewAdapter
+                }
+                Mode.FAVORITES -> {
+                    dataSet = Imgur.getFavoriteImages()
+                    viewAdapter = ImagesRvAdapter(this, dataSet)
+                    rv.adapter = viewAdapter
+                }
+            }
+
         }
 
         //! Init drawer
@@ -122,17 +135,20 @@ class  MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         // Handle navigation view item clicks here.
         when (item.itemId) {
             R.id.nav_import -> {
-                // Handle the camera action
+                val i = Intent(this, UploadActivity::class.java)
+                startActivity(i)
             }
             R.id.nav_gallery -> {
                 dataSet = Imgur.getSelfImages()
                 viewAdapter = ImagesRvAdapter(this, dataSet)
                 rv.adapter = viewAdapter
+                mode = Mode.GALLERY
             }
             R.id.nav_favorites -> {
                 dataSet = Imgur.getFavoriteImages()
                 viewAdapter = ImagesRvAdapter(this, dataSet)
                 rv.adapter = viewAdapter
+                mode = Mode.FAVORITES
             }
             R.id.nav_search-> {
                 val i = Intent(this, SearchActivity::class.java)

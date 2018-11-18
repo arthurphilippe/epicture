@@ -1,18 +1,16 @@
 package epitech.epicture
 
 import android.os.AsyncTask.execute
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.Response
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
+import okhttp3.*
 import org.json.JSONObject
 import java.lang.Exception
 
 
 class Imgur {
-    data class Item(val id: String, val title: String, val favorite : Boolean, val link: String)
+    data class Item(val id: String, val title: String, val description: String?, val favorite : Boolean, val link: String)
 
     companion object {
         private val gson = GsonBuilder().setPrettyPrinting().create()
@@ -78,5 +76,33 @@ class Imgur {
             return items
         }
 
+        fun toggleFavorite(id: String) {
+            val client = OkHttpClient()
+
+            val mediaType = MediaType.parse("application/octet-stream")
+            val body = RequestBody.create(mediaType, "")
+
+            val request = Request.Builder()
+                .url("https://api.imgur.com/3/image/${id}/favorite")
+                .post(body)
+                .addHeader("cache-control", "no-cache")
+                .addHeader("Authorization", "Bearer ${Imgur.accessToken}")
+                .build()
+            client.newCall(request).execute()
+        }
+
+/*
+        fun removeFromFavorites(id: String)  {
+            val client = OkHttpClient()
+
+            val request = Request.Builder()
+                .url("https://api.imgur.com/3/image/${id}/favorite")
+                .delete(null)
+                .addHeader("cache-control", "no-cache")
+                .addHeader("Authorization", "Bearer ${Imgur.accessToken}")
+                .build()
+            client.newCall(request).execute()
+        }
+*/
     }
 }
