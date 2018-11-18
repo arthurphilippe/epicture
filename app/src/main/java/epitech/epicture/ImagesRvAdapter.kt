@@ -29,7 +29,23 @@ class ImagesRvAdapter(val context: Context, var lists: List<Imgur.Item>) : Recyc
                 .with(context) // give it the context
                 .load(entry.link) // load the image
                 .into(itemView.image) // select the ImageView to load it into
-
+            Thread(Runnable{
+                if (entry.favorite) {
+                    itemView.buttonFav.setText("Remove from Favorites")
+//                    itemView.buttonFav.text = "Remove from Favorites"
+                } else {
+                    itemView.buttonFav.setText("Add to Favorites")
+                    //itemView.buttonFav.text =
+                }
+            }).start()
+            itemView.buttonFav.setOnClickListener{
+                    if (itemView.buttonFav.text == "Add to Favorites") {
+                        itemView.buttonFav.setText("Remove from Favorites")
+                    } else {
+                        itemView.buttonFav.setText("Add to Favorites")
+                    }
+                Imgur.toggleFavorite(entry.id)
+            }
         }
     }
 }
