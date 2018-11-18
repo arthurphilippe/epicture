@@ -1,10 +1,12 @@
 package epitech.epicture
 
 import android.content.Context
+import android.content.Intent
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.content_my_images.view.*
 
@@ -20,6 +22,12 @@ class ImagesRvAdapter(val context: Context, var lists: List<Imgur.Item>) : Recyc
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         (holder as Item).bindData(lists[position])
+        holder.itemView.image.setOnClickListener {
+            //Toast.makeText(context, lists[position].link, Toast.LENGTH_LONG).show()
+            val intent = Intent( context, FullScreenActivity::class.java )
+            intent.putExtra("hey", lists[position].link)
+            context.startActivity(intent)
+        }
     }
 
     class Item(val context: Context, itemView: View) : RecyclerView.ViewHolder(itemView) {
