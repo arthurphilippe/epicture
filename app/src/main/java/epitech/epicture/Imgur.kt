@@ -10,7 +10,13 @@ import java.lang.Exception
 
 
 class Imgur {
-    data class Item(val id: String, val title: String, val description: String?, val favorite : Boolean, val link: String)
+    data class Item(
+        val id: String,
+        val title: String,
+        val description: String?,
+        val favorite : Boolean,
+        val link: String
+    )
 
     companion object {
         private val gson = GsonBuilder().setPrettyPrinting().create()
@@ -28,6 +34,14 @@ class Imgur {
             return gson.fromJson(data.toString(), object : TypeToken<List<Item>>() {}.type)
         }
 
+        public fun parseItemFromResponse(response: Response) : Item
+        {
+            val json = response.body()?.string()
+            val jsonObj = JSONObject(json?.substring(json.indexOf("{"), json.lastIndexOf("}") + 1))
+            val data = jsonObj.getJSONObject("data")
+            return gson.fromJson(data.toString(), object : TypeToken<Item>() {}.type)
+        }
+
         private fun requestSelfImages() : Response
         {
             val client = OkHttpClient()
@@ -41,6 +55,26 @@ class Imgur {
 
             return client.newCall(request).execute()
         }
+
+        fun post(url: String, requestBody : RequestBody) : Response {
+            val client = OkHttpClient()
+            var auth =
+                if (Imgur.loggedIn) {
+                    "Bearer ${Imgur.accessToken}"
+                } else {
+                    "Client-ID d4fc4058731bcf0"
+                }
+
+            val request = Request.Builder()
+                .url(url)
+                .post(requestBody)
+                .addHeader("authorization", auth)
+                .addHeader("cache-control", "no-cache")
+                .build()
+            FormBody.Builder().build()
+            return client.newCall(request).execute()
+        }
+
 
         private fun requestFavoriteImages() : Response
         {

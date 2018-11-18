@@ -8,10 +8,18 @@ import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.support.v7.app.AppCompatActivity
+import android.util.Base64
 import android.view.View
 import android.widget.ImageView
+import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_upload.*
+import okhttp3.MultipartBody
+import java.io.ByteArrayOutputStream
+import java.io.File
 import java.io.IOException
+import android.widget.EditText
+import okhttp3.RequestBody
+
 
 class UploadActivity : AppCompatActivity() {
     private val requestPickImage = 1
@@ -35,7 +43,6 @@ class UploadActivity : AppCompatActivity() {
             && data != null && data.data != null
         ) {
             image = data
-            selectionMade = true
             val uri = data.data
 
             setBitmap(uri)
@@ -64,6 +71,7 @@ class UploadActivity : AppCompatActivity() {
             }
 
             buttonUpload.visibility = View.VISIBLE
+            selectionMade = true
         } catch (e: IOException) {
             e.printStackTrace()
         }
@@ -95,7 +103,6 @@ class UploadActivity : AppCompatActivity() {
             return
         }
         openImagePicker()
-//        buttonUpload.visibility = View.VISIBLE
     }
 
     private fun openImagePicker() {
@@ -106,6 +113,52 @@ class UploadActivity : AppCompatActivity() {
     }
 
     private fun onUploadImage(){
+        val url = "https://api.imgur.com/3/upload"
 
+        if (selectionMade) {
+            selectionMade = false
+            buttonUpload.text = "Uploading..."
+
+            Thread{
+                val b64 = compressBitmap()
+                val (title, description) = getDetails()
+
+                val requestBody = getRequestBody(b64, title, description)
+                var response = Imgur.post(url, requestBody)
+                val result = Imgur.parseItemFromResponse(response)
+
+                Toast.makeText(this, result.link, Toast.LENGTH_LONG).show()
+                finish()
+            }.start()
+        }
+    }
+
+    private fun getRequestBody(
+        b64: String?,
+        title: String,
+        description: String
+    ): RequestBody {
+        return MultipartBody.Builder()
+            .setType(MultipartBody.FORM)
+            .addFormDataPart("type", "file")
+            .addFormDataPart("image", b64)
+            .addFormDataPart("name", title)
+            .addFormDataPart("title", title)
+            .addFormDataPart("description", description)
+            .build()
+    }
+
+    private fun getDetails(): Pair<String, String> {
+        var text = findViewById<EditText>(R.id.imageTitle)
+        val title = text.text.toString()
+        text = findViewById(R.id.imageDescription)
+        val description = text.text.toString()
+        return Pair(title, description)
+    }
+
+    private fun compressBitmap(): String? {
+        val stream = ByteArrayOutputStream()
+        imageBitmap!!.compress(Bitmap.CompressFormat.PNG, 100, stream)
+        return Base64.encodeToString(File(path).readBytes(), 0)
     }
 }
