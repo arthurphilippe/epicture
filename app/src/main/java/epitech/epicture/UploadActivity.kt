@@ -1,28 +1,20 @@
 package epitech.epicture
 
-import android.Manifest
 import android.app.Activity
-import android.app.AlertDialog
-import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.net.Uri
-import android.os.Build
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
-import android.support.v4.app.ActivityCompat
-import android.support.v4.content.ContextCompat
+import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.widget.ImageView
 import kotlinx.android.synthetic.main.activity_upload.*
 import java.io.IOException
 
 class UploadActivity : AppCompatActivity() {
-    private val pickImageRequest = 1
+    private val requestPickImage = 1
     private var image : Intent? = null
     private var selectionMade : Boolean = false
     private var path : String? = null
@@ -36,10 +28,9 @@ class UploadActivity : AppCompatActivity() {
         buttonUpload.setOnClickListener{onUploadImage()}
     }
 
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == pickImageRequest
+        if (requestCode == requestPickImage
             && resultCode == Activity.RESULT_OK
             && data != null && data.data != null
         ) {
@@ -111,7 +102,7 @@ class UploadActivity : AppCompatActivity() {
         val intent = Intent()
         intent.type = "image/*"
         intent.action = Intent.ACTION_GET_CONTENT
-        startActivityForResult(Intent.createChooser(intent, "Pick an image"), pickImageRequest)
+        startActivityForResult(Intent.createChooser(intent, "Pick an image"), requestPickImage)
     }
 
     private fun onUploadImage(){
